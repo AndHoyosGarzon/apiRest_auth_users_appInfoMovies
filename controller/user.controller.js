@@ -41,7 +41,7 @@ export const register = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (user) {
-      return res.status(400).json({ message: "Existing user in database"});
+      return res.status(400).json({ message: "Existing user in database "});
     }
 
     const salt = await bcrypt.genSalt(10);
