@@ -38,6 +38,12 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "Error create user" });
     }
 
+    const user = await User.findOne({ email });
+
+    if (user) {
+      return res.status(400).json({ message: "Existing user in database" });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
 
@@ -48,13 +54,13 @@ export const register = async (req, res) => {
       password: hashed,
     };
 
-    const user = await User.create(newUser);
+    await User.create(newUser);
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY, {
       expiresIn: "1h",
     });
 
-    res.status(200).json(token);
+    res.status(200).json({ token });
   } catch (error) {
     console.log(`Error in register controller`, error.message);
     res.status(500).json({ message: "Internal server error" });
