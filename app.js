@@ -7,7 +7,9 @@ import cors from "cors";
 const app = express();
 dotenv.config();
 
-app.options("*", cors());
+app.disable("x-powered-by");
+
+app.use(cors());
 
 app.use(express.json());
 
